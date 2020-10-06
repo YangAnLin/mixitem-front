@@ -4,23 +4,19 @@
     <!-- 筛选条件 -->
     <a-form layout="inline">
 
-      <a-form-model-item label="查询类型">
-        <a-input v-model="form.name"/>
-      </a-form-model-item>
-
       <a-form-model-item label="注册IP">
-        <a-input v-model="form.name"/>
+        <a-input v-model="queryForm.registerIp"/>
       </a-form-model-item>
 
       <a-form-model-item label="状态">
-        <a-select v-model="form.region">
-          <a-select-option value="1">
+        <a-select v-model="queryForm.running">
+          <a-select-option value="-1">
             全部
           </a-select-option>
-          <a-select-option value="2">
+          <a-select-option value="0">
             正常
           </a-select-option>
-          <a-select-option value="3">
+          <a-select-option value="1">
             冻结
           </a-select-option>
         </a-select>
@@ -28,12 +24,11 @@
 
       <a-form-model-item label="开始时间">
         <a-date-picker
-            v-model="form.date"
+            v-model="queryForm.registerStartDate"
             show-time
             type="date"
-            placeholder="Pick a date"
-            style="width: 100%;"
-        />
+            placeholder="输入开始注册时间"
+            style="width: 100%;"/>
       </a-form-model-item>
 
     </a-form>
@@ -70,6 +65,7 @@
 export default {
   name: 'GameUserManager',
   data() {
+
     return {
       // 当前页
       current: 1,
@@ -98,20 +94,12 @@ export default {
           scopedSlots: {customRender: 'birthday'}
         },
       ],
-      queryParam: {
-        "current": this.current,
-        "size": this.size,
-      },
       labelCol: {span: 1},
       wrapperCol: {span: 2},
-      form: {
-        name: '',
-        region: '全部',
-        date: '2020-01-01 00:00:00',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: '',
+      queryForm: {
+        registerIp: '',
+        registerStartDate: '2020-01-01 00:00:00',
+        running: "-1"
       },
     }
   },
@@ -127,9 +115,12 @@ export default {
     },
     // 查询
     query() {
+      console.log(this.current)
+      console.log(this.queryParam)
       this.$axios.post("http://localhost:20001/account/list", {
-        "current": this.current,
-        "size": this.size,
+        current:this.current,
+        size:this.size,
+        searchParams:this.queryForm
       }).then(res => {
         console.log("返回的数据", res.data.data.data)
         let response = res.data.data
@@ -139,15 +130,8 @@ export default {
         this.total = response.total
         // // 当前页
         this.current = response.current
-        // // 每页条数
-        // this.size = response.size
       })
     },
-    // 提交表单
-    handleSubmit() {
-
-    }
-
   }
 };
 

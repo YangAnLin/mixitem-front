@@ -23,14 +23,21 @@
           <!-- 菜单 -->
           <a-menu mode="inline" :default-selected-keys="['1']" :default-open-keys="['sub1']" style="height: 100%">
 
-            <a-sub-menu key="sub1" @click="toPage">
+<!--            <a-sub-menu key="sub1" @click="toPage">-->
+<!--              <span slot="title"><a-icon type="user"/>首页</span>-->
+<!--              <a-menu-item v-for="subItem in submenu" :key="subItem.menuUrl" :index="subItem.menuUrl" @click="add(subItem)" @change="toPage(subItem.path)">-->
+<!--                {{ subItem.menuName }}-->
+<!--              </a-menu-item>-->
+<!--            </a-sub-menu>-->
 
-              <span slot="title"><a-icon type="user"/>首页</span>
 
-              <a-menu-item v-for="subItem in submenu" :key="subItem.index" :index="subItem.index"
-                           @click="add(subItem)"
-                           @change="toPage(subItem.path)">
-                {{ subItem.text }}
+            <a-sub-menu v-for="subItem in submenu" :key="subItem.id" @click="toPage">
+              <!-- 一级 -->
+              <span slot="title"><a-icon type="appstore"/><span>{{ subItem.menuName }}</span></span>
+
+              <!-- 二级 -->
+              <a-menu-item v-for="sub in subItem.children" :key="sub.menuUrl" :index="sub.menuUrl" @click="add(sub)" @change="toPage(sub.menuUrl)">
+                {{ sub.menuName }}
               </a-menu-item>
 
             </a-sub-menu>
@@ -68,20 +75,35 @@ export default {
       panes,
       newTabIndex: 0,
       submenu: [
-        {text: '首页', path: '/', index: '/'},
-        {text: '用户管理', path: '/gameUserManager', index: '/gameUserManager'},
-        {text: '权限管理', path: '/permissions', index: '/permissions'},
-        {text: '角色管理', path: '/roles', index: '/roles'}
+        // {text: '首页', path: '/', index: '/'},
+        // {text: '用户管理', path: '/gameUserManager', index: '/gameUserManager'},
+        // {text: '权限管理', path: '/permissions', index: '/permissions'},
+        // {text: '角色管理', path: '/roles', index: '/roles'}
       ]
     }
   },
+  created() {
+    this.queryPermissions();
+  },
   methods: {
+    queryPermissions() {
+      this.$axios.get("http://localhost:20001/account/menus").then(res => {
+        console.log("返回的数据", res.data.data)
+        let response = res.data.data
+        // 数据
+        this.submenu = response
+        // 总条数
+        this.total = response.total
+        // // 当前页
+        this.current = response.current
+      })
+    },
     // 添加选项卡
     add(obj) {
       // 判断标签是否已经存在了
       for (const page of this.panes) {
         if (page.title == obj.text) {   // 已经存在了,就跳转到指定的地方
-          console.log("已经存在",page)
+          console.log("已经存在", page)
           this.activeKey = page.key;
           return;
         }
@@ -92,7 +114,7 @@ export default {
       const panes = this.panes;
       const activeKey = `${obj.text}${this.newTabIndex++}`;
       panes.push({
-        title: obj.text,
+        title: obj.menuName,
         key: activeKey,
         index: obj.index,
         content: `Content of new Tab ${activeKey}`,
@@ -112,11 +134,11 @@ export default {
       console.log("切换到{}选项卡", activeKey);
 
       for (const page of this.panes) {
-        console.log("1循环李的page",page)
+        console.log("1循环李的page", page)
         if (page.key == this.activeKey) {
-          console.log("2循环李的page",page)
+          console.log("2循环李的page", page)
           this.activeKey = page.key;
-          return ;
+          return;
         }
       }
     },
@@ -144,17 +166,7 @@ export default {
 
     // 打开页面
     toPage(path) {
-      console.log("topage调用",path)
-
-      // 判断标签是否已经存在了
-      // for (const page of this.panes) {
-      //   if (page.index == path) {   // 已经存在了,就跳转到指定的地方
-      //     this.activeKey = page.key;
-      //     return;
-      //   }
-      // }
-
-
+      console.log("topage调用", path)
       this.$router.push(path.key).catch(err => err)
     }
   }

@@ -11,7 +11,7 @@ const routes = [
     component: () => import('@/components/Home.vue')
   },
   {
-    path: '/gameUserManager',
+    path: '/account/list',
     name: 'GameUserManager',
     component: () => import ('@/components/GameUserManager.vue')
   },
