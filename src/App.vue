@@ -23,12 +23,12 @@
           <!-- 菜单 -->
           <a-menu mode="inline" :default-selected-keys="['1']" :default-open-keys="['sub1']" style="height: 100%">
 
-            <a-sub-menu v-for="subItem in submenu" :key="subItem.id" @click="toPage">
+            <a-sub-menu v-for="subItem in submenu" :key="subItem.id">
               <!-- 一级 -->
               <span slot="title"><a-icon type="appstore"/><span>{{ subItem.menuName }}</span></span>
 
               <!-- 二级 -->
-              <a-menu-item v-for="sub in subItem.children" :key="sub.id" :index="sub.menuUrl" @click="add(sub)" @change="toPage(sub.menuUrl)">
+              <a-menu-item v-for="sub in subItem.children" :key="sub.id" :index="sub.menuUrl" @click="add(sub)">
                 {{ sub.menuName }}
               </a-menu-item>
 
@@ -79,10 +79,6 @@ export default {
         let response = res.data.data
         // 数据
         this.submenu = response
-        // 总条数
-        this.total = response.total
-        // // 当前页
-        this.current = response.current
       })
     },
     // 添加选项卡
@@ -98,31 +94,28 @@ export default {
 
       console.log("会不会调用下面的")
 
-      const panes = this.panes;
-      const activeKey = obj.id;
-      panes.push({
+      this.panes.push({
         title: obj.menuName,
-        key: activeKey,
+        key: obj.id,
+        url:obj.menuUrl,
       });
-      this.panes = panes;
-      this.activeKey = activeKey;
+      this.activeKey = obj.id;
+      this.$router.push(obj.menuUrl).catch(err => err)
     },
 
     // 关闭选项卡
     onEdit(targetKey, action) {
-      console.log("edit", targetKey, action)
       this[action](targetKey);
     },
 
     // 切换选项卡
     change(activeKey) {
-      console.log("切换到{}选项卡", activeKey);
 
       for (const page of this.panes) {
         console.log("1循环李的page", page)
-        if (page.id === this.activeKey) {
+        if (page.key === activeKey) {
           console.log("2循环李的page", page)
-          this.activeKey = page.id;
+          this.activeKey = page.key;
           return;
         }
       }
@@ -148,11 +141,6 @@ export default {
       this.panes = panes;
       this.activeKey = activeKey;
     },
-
-    // 打开页面
-    toPage(path) {
-      this.$router.push(path.key).catch(err => err)
-    }
   }
 };
 </script>
