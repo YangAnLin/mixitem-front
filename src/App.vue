@@ -23,20 +23,12 @@
           <!-- 菜单 -->
           <a-menu mode="inline" :default-selected-keys="['1']" :default-open-keys="['sub1']" style="height: 100%">
 
-<!--            <a-sub-menu key="sub1" @click="toPage">-->
-<!--              <span slot="title"><a-icon type="user"/>首页</span>-->
-<!--              <a-menu-item v-for="subItem in submenu" :key="subItem.menuUrl" :index="subItem.menuUrl" @click="add(subItem)" @change="toPage(subItem.path)">-->
-<!--                {{ subItem.menuName }}-->
-<!--              </a-menu-item>-->
-<!--            </a-sub-menu>-->
-
-
             <a-sub-menu v-for="subItem in submenu" :key="subItem.id" @click="toPage">
               <!-- 一级 -->
               <span slot="title"><a-icon type="appstore"/><span>{{ subItem.menuName }}</span></span>
 
               <!-- 二级 -->
-              <a-menu-item v-for="sub in subItem.children" :key="sub.menuUrl" :index="sub.menuUrl" @click="add(sub)" @change="toPage(sub.menuUrl)">
+              <a-menu-item v-for="sub in subItem.children" :key="sub.id" :index="sub.menuUrl" @click="add(sub)" @change="toPage(sub.menuUrl)">
                 {{ sub.menuName }}
               </a-menu-item>
 
@@ -66,20 +58,15 @@
 export default {
   data() {
     const panes = [
-      {title: '首页写', key: '0', closable: false},
+      {title: '首页写', id: '0', closable: false},
     ];
     return {
       // 当前激活 tab 面板的 key
-      activeKey: panes[0].key,
+      activeKey: panes[0].id,
       // 所有选项卡集合
       panes,
       newTabIndex: 0,
-      submenu: [
-        // {text: '首页', path: '/', index: '/'},
-        // {text: '用户管理', path: '/gameUserManager', index: '/gameUserManager'},
-        // {text: '权限管理', path: '/permissions', index: '/permissions'},
-        // {text: '角色管理', path: '/roles', index: '/roles'}
-      ]
+      submenu: []
     }
   },
   created() {
@@ -102,7 +89,7 @@ export default {
     add(obj) {
       // 判断标签是否已经存在了
       for (const page of this.panes) {
-        if (page.title == obj.text) {   // 已经存在了,就跳转到指定的地方
+        if (page.key === obj.id) {   // 已经存在了,就跳转到指定的地方
           console.log("已经存在", page)
           this.activeKey = page.key;
           return;
@@ -112,12 +99,10 @@ export default {
       console.log("会不会调用下面的")
 
       const panes = this.panes;
-      const activeKey = `${obj.text}${this.newTabIndex++}`;
+      const activeKey = obj.id;
       panes.push({
         title: obj.menuName,
         key: activeKey,
-        index: obj.index,
-        content: `Content of new Tab ${activeKey}`,
       });
       this.panes = panes;
       this.activeKey = activeKey;
@@ -135,9 +120,9 @@ export default {
 
       for (const page of this.panes) {
         console.log("1循环李的page", page)
-        if (page.key == this.activeKey) {
+        if (page.id === this.activeKey) {
           console.log("2循环李的page", page)
-          this.activeKey = page.key;
+          this.activeKey = page.id;
           return;
         }
       }
@@ -166,7 +151,6 @@ export default {
 
     // 打开页面
     toPage(path) {
-      console.log("topage调用", path)
       this.$router.push(path.key).catch(err => err)
     }
   }
