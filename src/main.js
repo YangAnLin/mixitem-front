@@ -15,7 +15,6 @@ Vue.prototype.$axios = axios
 // 时间过滤器
 Vue.filter('dateformat', function(dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
   return moment(dataStr).format(pattern)
-
 })
 
 Vue.config.productionTip = false

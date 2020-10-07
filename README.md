@@ -1,3 +1,8 @@
+# mixitem的前端页面
+Vue.js  
+moment.js  
+ant Design Vue
+
 # mixitem
 
 ## Project setup
