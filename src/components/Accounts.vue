@@ -1,8 +1,8 @@
 <template>
   <div>
-    <a-card>
+    <a-card style="box-shadow: 5px 5px 5px #888888;">
       <!-- 面包屑 -->
-      <a-breadcrumb style="margin-bottom: 5px">
+      <a-breadcrumb style="margin-bottom: 5px" >
         <a-breadcrumb-item>用户管理</a-breadcrumb-item>
         <a-breadcrumb-item>会员列表</a-breadcrumb-item>
       </a-breadcrumb>

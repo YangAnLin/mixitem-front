@@ -1,27 +1,34 @@
 <template>
   <div>
-    <!-- 表格 -->
-    <a-table
-        show-size-changer
-        :columns="columns"
-        rowKey="id"
-        :data-source="table_data"
-        bordered
-        :pagination=false>
-      <template slot="birthday" slot-scope="text">
-        {{ text | dateformat('YYYY-MM-DD HH:mm:ss') }}
-      </template>
-    </a-table>
-    <a-pagination
-        :total=total
-        :show-total="total => `共有 ${total} 条数据`"
-        :page-size=size
-        :default-current="1"
-        :defaultPageSize=size
-        :pageSize-options="pageSizeOptions"
-        @change="changePage"
-        style="margin-top: 10px"
-    />
+    <a-card style="box-shadow: 5px 5px 5px #888888;">
+      <!-- 面包屑 -->
+      <a-breadcrumb style="margin-bottom: 5px">
+        <a-breadcrumb-item>用户管理</a-breadcrumb-item>
+        <a-breadcrumb-item>会员列表</a-breadcrumb-item>
+      </a-breadcrumb>
+      <!-- 表格 -->
+      <a-table
+          show-size-changer
+          :columns="columns"
+          rowKey="id"
+          :data-source="table_data"
+          bordered
+          :pagination=false>
+        <template slot="birthday" slot-scope="text">
+          {{ text | dateformat('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </a-table>
+      <a-pagination
+          :total=total
+          :show-total="total => `共有 ${total} 条数据`"
+          :page-size=size
+          :default-current="1"
+          :defaultPageSize=size
+          :pageSize-options="pageSizeOptions"
+          @change="changePage"
+          style="margin-top: 10px"
+      />
+    </a-card>
   </div>
 </template>
 
@@ -82,9 +89,9 @@ export default {
       console.log(this.current)
       console.log(this.queryParam)
       this.$axios.post("http://localhost:20001/account/list", {
-        current:this.current,
-        size:this.size,
-        searchParams:this.queryForm
+        current: this.current,
+        size: this.size,
+        searchParams: this.queryForm
       }).then(res => {
         console.log("返回的数据", res.data.data.data)
         let response = res.data.data
