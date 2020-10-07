@@ -13,7 +13,7 @@ const routes = [
   {
     path: '/account/list',
     name: 'GameUserManager',
-    component: () => import ('@/components/GameUserManager.vue')
+    component: () => import ('@/components/Accounts.vue')
   },
   {
     path: '/permissions',
