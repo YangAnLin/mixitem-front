@@ -28,7 +28,7 @@
               <span slot="title"><a-icon type="appstore"/><span>{{ subItem.menuName }}</span></span>
 
               <!-- 二级 -->
-              <a-menu-item v-for="sub in subItem.children" :key="sub.id" :index="sub.menuUrl" @click="add(sub)">
+              <a-menu-item v-for="sub in subItem.children" :key="sub.id" :index="sub.menuUrl" @click="open(sub)">
                 {{ sub.menuName }}
               </a-menu-item>
 
@@ -40,12 +40,13 @@
         <!-- 内容 -->
         <a-layout-content :style="{ padding: '0 24px', minHeight: '800px' }">
           <!-- 选项卡 -->
-          <a-tabs v-model="activeKey" hide-add type="editable-card" @edit="onEdit" @change="change">
-            <a-tab-pane v-for="pane in panes" :key="pane.key" :tab="pane.title" :closable="pane.closable">
-              <!--路由占位符-->
-              <router-view/>
-            </a-tab-pane>
-          </a-tabs>
+<!--          <a-tabs v-model="activeKey" hide-add type="editable-card" @edit="onEdit" @change="change">-->
+<!--            <a-tab-pane v-for="pane in panes" :key="pane.key" :tab="pane.title" :closable="pane.closable">-->
+<!--              &lt;!&ndash;路由占位符&ndash;&gt;-->
+<!--              <router-view/>-->
+<!--            </a-tab-pane>-->
+<!--          </a-tabs>-->
+          <router-view/>
         </a-layout-content>
 
       </a-layout>
@@ -82,6 +83,9 @@ export default {
       })
     },
     // 添加选项卡
+    open(obj){
+      this.$router.push(obj.menuUrl).catch(err => err)
+    },
     add(obj) {
       // 判断标签是否已经存在了
       for (const page of this.panes) {
