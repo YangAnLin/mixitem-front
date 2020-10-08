@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     queryPermissions() {
-      this.$axios.get("http://localhost:20001/account/menus").then(res => {
+      this.$axios.get("http://localhost:20001/menu/list").then(res => {
         console.log("返回的数据", res.data.data)
         let response = res.data.data
         // 数据
